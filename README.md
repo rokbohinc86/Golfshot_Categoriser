@@ -43,7 +43,7 @@ To characterize the type of golf shot I mainly need the Launch Direction and Sid
 
 ### Videos
 
-The general problem with machine learning being applied to videos is that all videos have to be of the same shape, this means resolution and the number of frames. Different numbers of frames can be problematic when the velocity of golf swings varies. Therefore not all frames can be taken as the input. (McNally et. al.){https://arxiv.org/abs/1903.06528} developed a lightweight ML model for finding key positions in a golf swing. The positions were labeled:
+The general problem with machine learning being applied to videos is that all videos have to be of the same shape, this means resolution and the number of frames. Different numbers of frames can be problematic when the velocity of golf swings varies. Therefore not all frames can be taken as the input. [McNally et. al.](https://arxiv.org/abs/1903.06528) developed a lightweight ML model for finding key positions in a golf swing. The positions were labeled:
 
 - Address 
 - Toe-up
@@ -55,3 +55,10 @@ The general problem with machine learning being applied to videos is that all vi
 - Finish
 
 The model correctly detects eight golf swing events at an average rate of 76.1%, and six out of eight events at a rate of 91.8%. The idea is to extract these 8 characteristic frames for all videos collected in practice sessions with a mobile device via the Garmin Golf App. 
+
+Predicting key frames from a Garmin Golf video runs without a problem by executing test_video.py.
+
+## To Do
+- Create a script that processes Garmin metric files and produces labels of the golf shots.
+- Write a script that takes the path to directories with golf shot videos as an input parameter and for each video extracts and saves the 8 key frames.
+- Create a data set of about 1000 videos. Make sure to record videos with various offsets and angles (although this could also be achieved with augmentation), positions on the driving range, etc. 

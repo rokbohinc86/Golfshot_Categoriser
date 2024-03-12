@@ -41,6 +41,12 @@ To characterize the type of golf shot I mainly need the Launch Direction and Sid
 - Launch Direction  ( < -5 ° = pull, straight, > 5 ° = push)
 - Sidespin  ( < -800 rpm = hook,  -800 rpm < < -300 rpm = draw, -300 rpm < < 300 rpm = straight, 300 rpm < < 800 rpm = fade, > 800 rpm = slice)
 
+#### Extraction of labels
+
+1 Place the driving range file from Garmin under data/raw/Metrics.
+2 Run labelProcessing.py to create the labels of the golf shots. The file will be saved under data/extraced/labels.
+
+
 ### Videos
 
 The general problem with machine learning being applied to videos is that all videos have to be of the same shape, this means resolution and the number of frames. Different numbers of frames can be problematic when the velocity of golf swings varies. Therefore not all frames can be taken as the input. [McNally et. al.](https://arxiv.org/abs/1903.06528) developed a lightweight ML model for finding key positions in a golf swing. The positions were labeled:
@@ -59,6 +65,5 @@ The model correctly detects eight golf swing events at an average rate of 76.1%,
 Predicting key frames from a Garmin Golf video runs without a problem by executing test_video.py.
 
 ## To Do
-- Create a script that processes Garmin metric files and produces labels of the golf shots.
 - Write a script that takes the path to directories with golf shot videos as an input parameter and for each video extracts and saves the 8 key frames.
 - Create a data set of about 1000 videos. Make sure to record videos with various offsets and angles (although this could also be achieved with augmentation), positions on the driving range, etc. 

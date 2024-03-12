@@ -81,12 +81,12 @@ def shot_curvature(x: float) -> str:
         str: the of curvature
     """
     if x < -800:
-        return "hook"
+        return "slice"
     elif x < -300:
-        return "draw"
+        return "fade"
     elif x < 300:
         return ""
     elif x < 800:
-        return "fade"
+        return "draw"
     else:
-        return "slice"
+        return "hook"

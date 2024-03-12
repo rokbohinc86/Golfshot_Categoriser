@@ -39,7 +39,7 @@ The metrics file is a CSV file with each row representing a different shot in th
 To characterize the type of golf shot I mainly need the Launch Direction and Sidespin. Of course, the amount of shaping is a function of the air resistance which is a nonlinear function (I think quadratic should be applicable in this speed regime), but I neglect these effects. The Launch Direction describes if the shot is a pull, push, or a straight shot. The amount of Sidespin determines if the shape is a hook, draw, straight, fade or slice. Here I have to make a rule of thumb on when to classify a shot based on the two parameters. Below is a guideline:
 
 - Launch Direction  ( < -5 ° = pull, straight, > 5 ° = push)
-- Sidespin  ( < -800 rpm = hook,  -800 rpm < < -300 rpm = draw, -300 rpm < < 300 rpm = straight, 300 rpm < < 800 rpm = fade, > 800 rpm = slice)
+- Sidespin  ( < -800 rpm = slice,  -800 rpm < < -300 rpm = fade, -300 rpm < < 300 rpm = straight, 300 rpm < < 800 rpm = draw, > 800 rpm = hook)
 
 #### Extraction of labels
 

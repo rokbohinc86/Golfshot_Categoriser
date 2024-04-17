@@ -24,7 +24,17 @@ model predicts one of the following golf shot shapes/types:
 
 ## Data
 
-Data will be collected via the Garmin R10 golf shot tracking monitor. This device can be used to record videos and various golf shot metrics. The application involves pairing it with a mobile phone where the Garmin Golf App is installed. The metrics of the driving range session, containing several shots, as well as individual golf shots can be downloaded via the Garmin Golf App. It can be however tedious to download the videos individually. Also, there is no clear key on how to link them to the metrics when downloading them individually. The data on the mobile device cannot be directly accessed. However, linking it with a computer all videos can be accessed. I have done this with the iMazing app on my MacBook. Luckily the videos are labeled with a number, which makes it possible to assign them to a row in the metrics file.
+Data will be collected via the Garmin R10 golf shot tracking monitor. This device can be used to record videos and various golf shot metrics. The application involves pairing it with a mobile phone where the Garmin Golf App is installed. The metrics of the driving range session, containing several shots, as well as individual golf shots can be downloaded via the Garmin Golf App. It can be however tedious to download the videos individually. Also, there is no clear key on how to link them to the metrics when downloading them individually. The data on the mobile device cannot be directly accessed. However, linking it with a computer all videos can be accessed. I have done this with the iMazing app on my MacBook.  The videos can be linked with the metric data based on the creation date.
+
+### iMazing
+
+In the free version you get a limited amount of videos you can extract and copy to mac. I have bought a pro licence for 65 CHF (one time price), which lets you use the software to download any amount of videos for up to three devices.
+
+- Open the App
+- Create a backup of the device
+- In the iMazing app, select the device you have made a backup and go undder File System -> Apps -> Golf -> Backups -> Document
+- The metric files are stored in this path
+- The videos are stored under the subfolder "output"
 
 ### Metrics
 

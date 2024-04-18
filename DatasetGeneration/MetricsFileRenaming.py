@@ -45,4 +45,3 @@ file_paths = list(zip(old_paths, new_paths))
 for old_path, new_path in file_paths:
     os.rename(old_path, new_path)
 
-# %%

@@ -86,7 +86,7 @@ def get_event_prob(probs, events):
     return confidence
 
 
-def copmpose_frames(cap, events):
+def compose_frames(cap, events):
     """
     Save key frames of the golf shot into a list of rgb object
 
@@ -142,10 +142,9 @@ def export_SwingNet_video(
 
     # Create a mp4 video
     cap = cv2.VideoCapture(inp_video_path)
-    frames = copmpose_frames(cap, events)
+    frames = compose_frames(cap, events)
     clip = ImageSequenceClip(frames, fps=4)
     clip.write_videofile(out_video_path, codec="libx264")
-
 
 
 if __name__ == "__main__":

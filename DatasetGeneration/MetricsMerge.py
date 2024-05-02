@@ -6,15 +6,16 @@ from enum import Enum, auto
 
 # %% Shot-shape functions
 
+
 def shot_direction(
     launchDirection: float, pull_border: float = -5, push_border: float = 5
 ):
     if launchDirection < pull_border:
         return "PULL"
     elif launchDirection > push_border:
-        return "STRAIGHT"
-    else:
         return "PUSH"
+    else:
+        return "STRAIGHT"
 
 
 def shot_curvature(
@@ -34,6 +35,7 @@ def shot_curvature(
         return "DRAW"
     else:
         return "HOOK"
+
 
 def shotType(shot_direction, shot_curvature):
     if shot_direction == "PULL" and shot_curvature == "HOOK":
@@ -66,7 +68,7 @@ def shotType(shot_direction, shot_curvature):
         return "PUSH_FADE"
     elif shot_direction == "PUSH" and shot_curvature == "SLICE":
         return "PUSH_SLICE"
-    else: 
+    else:
         return "NO_CATEGORY"
 
 
@@ -122,7 +124,9 @@ df_metrics = df_metrics.sort_values(by="Date")
 # %% Add Shot type to the data frame
 df_metrics["shot_direction"] = df_metrics["Launch Direction"].apply(shot_direction)
 df_metrics["shot_curvature"] = df_metrics["Sidespin"].apply(shot_curvature)
-df_metrics['shot_type'] = df_metrics.apply(lambda row: shotType(row['shot_direction'], row['shot_curvature']), axis=1)
+df_metrics["shot_type"] = df_metrics.apply(
+    lambda row: shotType(row["shot_direction"], row["shot_curvature"]), axis=1
+)
 
 # %% Export data frame
 df_metrics.to_csv(os.path.join(extractedMetrics, "MergedMetrics.csv"))

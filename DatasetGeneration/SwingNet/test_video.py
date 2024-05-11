@@ -3,7 +3,7 @@ import cv2
 import torch
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
-from model import EventDetector
+from .model import EventDetector
 import numpy as np
 import torch.nn.functional as F
 

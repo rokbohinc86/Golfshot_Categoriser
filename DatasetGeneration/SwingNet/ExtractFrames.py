@@ -4,9 +4,9 @@ import cv2
 import torch
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
-from eval import ToTensor, Normalize
-from model import EventDetector
-from test_video import SampleVideo
+from .eval import ToTensor, Normalize
+from .model import EventDetector
+from .test_video import SampleVideo
 import torch.nn.functional as F
 import sys
 import numpy as np

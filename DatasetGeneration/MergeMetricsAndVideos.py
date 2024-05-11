@@ -3,7 +3,7 @@ import os
 import re
 import pandas as pd
 import datetime
-from SwingNet.ExtractFrames import export_SwingNet_video
+from SwingNet import export_SwingNet_video
 
 
 # %% Metrics
@@ -47,4 +47,10 @@ merged = pd.merge_asof(
 )
 
 # %%
-export_SwingNet_video(inp_video_path=)
+export_SwingNet_video(
+    inp_video_path="/Users/rokbohinc/Documents/Work/Golf_AI/Golfshot_Categoriser/data/raw/Videos/1575B739-F5FD-4F2D-9B81-8EBEAC2875712024-04-16/Shot13.mp4",
+    out_video_path="/Users/rokbohinc/Documents/Work/Golf_AI/Golfshot_Categoriser/data/extracted/videos/1.mp4",
+    model_path="/Users/rokbohinc/Documents/Work/Golf_AI/Golfshot_Categoriser/DatasetGeneration/SwingNet/models/swingnet_2000.pth.tar",
+)
+
+# %%

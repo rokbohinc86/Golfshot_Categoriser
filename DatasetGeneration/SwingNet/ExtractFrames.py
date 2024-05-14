@@ -4,14 +4,18 @@ import cv2
 import torch
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
-from .eval import ToTensor, Normalize
-from .model import EventDetector
-from .test_video import SampleVideo
 import torch.nn.functional as F
 import sys
 import numpy as np
 from moviepy.editor import ImageSequenceClip
 import matplotlib.pyplot as plt
+from typing import List, Tuple
+
+
+# Package imports
+from eval import ToTensor, Normalize
+from model import EventDetector
+from test_video import SampleVideo
 
 
 def init_data(video_path):
@@ -121,7 +125,7 @@ def compose_frames(cap, events):
 
 
 def export_SwingNet_video(
-    inp_video_path: str, out_video_path: str, model_path: str, seq_length: int = 64
+    inp_video_path: str, out_video_path: str, model, seq_length: int = 64
 ) -> None:
     """This function extracts the key frames of a golfshot based on the SwingNet model and exports
         a truncated video consisting only of the key frames to the desired output path.
@@ -129,12 +133,11 @@ def export_SwingNet_video(
     Args:
         inp_video_path (str): Path to the input mp4 video
         out_video_path (str): Path to which the output mp4 video should be exported
-        model_path (str): Path to the SwingNet model
+        model: SwingNet model to use
         seq_length (int): Number of frames to use per forward pass
     """
-    # Initialize data and model
+    # Initialize data
     dl = init_data(inp_video_path)
-    model = init_model(modelpath=model_path)
 
     # Calculate key Frames
     probs = calc_probs(dl, model, seq_length)
@@ -147,11 +150,30 @@ def export_SwingNet_video(
     clip.write_videofile(out_video_path, codec="libx264")
 
 
+# %%
+
+
+def export_SwingNet_videos(video_paths: List[Tuple], modelpath, seq_length: int = 64):
+    model = init_model(modelpath)
+
+    for i, (inp_path, out_path) in enumerate(video_paths):
+        print(
+            f"Processing file {i + 1}/{len(video_paths)} ({(i + 1) / len(video_paths) * 100:.2f}%)"
+        )
+        export_SwingNet_video(
+            inp_video_path=inp_path, out_video_path=out_path, model=model
+        )
+
+
+# %%
+
 if __name__ == "__main__":
     export_SwingNet_video(
         inp_video_path="/Users/rokbohinc/Documents/Work/Golf_AI/Golfshot_Categoriser/data/raw/Videos/1575B739-F5FD-4F2D-9B81-8EBEAC2875712024-04-16/Shot13.mp4",
         out_video_path="/Users/rokbohinc/Documents/Work/Golf_AI/Golfshot_Categoriser/DatasetGeneration/SwingNet/output_video.mp4",
-        model_path="/Users/rokbohinc/Documents/Work/Golf_AI/Golfshot_Categoriser/DatasetGeneration/SwingNet/models/swingnet_2000.pth.tar",
+        model=init_model(
+            modelpath="/Users/rokbohinc/Documents/Work/Golf_AI/Golfshot_Categoriser/DatasetGeneration/SwingNet/models/swingnet_2000.pth.tar"
+        ),
     )
 
 # %%

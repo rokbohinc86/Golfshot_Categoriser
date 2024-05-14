@@ -3,9 +3,11 @@ import cv2
 import torch
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
-from .model import EventDetector
 import numpy as np
 import torch.nn.functional as F
+
+# Package imports
+from model import EventDetector
 
 event_names = {
     0: "Address",

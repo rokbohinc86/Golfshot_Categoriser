@@ -1,11 +1,14 @@
-from .model import EventDetector
 import torch
 from torch.utils.data import DataLoader
 from torchvision import transforms
-from .dataloader import GolfDB, ToTensor, Normalize
 import torch.nn.functional as F
 import numpy as np
-from .util import correct_preds
+
+
+# Package imports
+from util import correct_preds
+from dataloader import GolfDB, ToTensor, Normalize
+from model import EventDetector
 
 
 def eval(model, split, seq_length, n_cpu, disp):

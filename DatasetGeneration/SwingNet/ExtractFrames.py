@@ -125,7 +125,7 @@ def compose_frames(cap, events):
 
 
 def export_SwingNet_video(
-    inp_video_path: str, out_video_path: str, model, seq_length: int = 64
+    inp_video_path: str, out_video_path: str, model, fps: int, seq_length: int = 64
 ) -> None:
     """This function extracts the key frames of a golfshot based on the SwingNet model and exports
         a truncated video consisting only of the key frames to the desired output path.
@@ -146,14 +146,16 @@ def export_SwingNet_video(
     # Create a mp4 video
     cap = cv2.VideoCapture(inp_video_path)
     frames = compose_frames(cap, events)
-    clip = ImageSequenceClip(frames, fps=4)
-    clip.write_videofile(out_video_path, codec="libx264")
+    clip = ImageSequenceClip(frames, fps)
+    clip.write_videofile(out_video_path, codec="libx264", logger=None)
 
 
 # %%
 
 
-def export_SwingNet_videos(video_paths: List[Tuple], modelpath, seq_length: int = 64):
+def export_SwingNet_videos(
+    video_paths: List[Tuple], modelpath, seq_length: int = 64, fps: int = 30
+):
     model = init_model(modelpath)
 
     for i, (inp_path, out_path) in enumerate(video_paths):
@@ -161,7 +163,7 @@ def export_SwingNet_videos(video_paths: List[Tuple], modelpath, seq_length: int 
             f"Processing file {i + 1}/{len(video_paths)} ({(i + 1) / len(video_paths) * 100:.2f}%)"
         )
         export_SwingNet_video(
-            inp_video_path=inp_path, out_video_path=out_path, model=model
+            inp_video_path=inp_path, out_video_path=out_path, model=model, fps=fps
         )
 
 
@@ -174,6 +176,7 @@ if __name__ == "__main__":
         model=init_model(
             modelpath="/Users/rokbohinc/Documents/Work/Golf_AI/Golfshot_Categoriser/DatasetGeneration/SwingNet/models/swingnet_2000.pth.tar"
         ),
+        fps=30,
     )
 
 # %%

@@ -1,18 +1,16 @@
-# %% Libraries
 import os
 import pandas as pd
-from enum import Enum, auto
+from typing import List
 
 
 # %% Shot-shape functions
-
-
 def shot_direction(
-    launchDirection: float, pull_border: float = -5, push_border: float = 5
-):
-    if launchDirection < pull_border:
+    launch_direction: float, pull_border: float = -5, push_border: float = 5
+) -> str:
+    """Determine shot direction based on launch direction."""
+    if launch_direction < pull_border:
         return "PULL"
-    elif launchDirection > push_border:
+    elif launch_direction > push_border:
         return "PUSH"
     else:
         return "STRAIGHT"
@@ -24,7 +22,8 @@ def shot_curvature(
     fade_border: float = -300,
     draw_border: float = 300,
     hook_border: float = 800,
-):
+) -> str:
+    """Determine shot curvature based on sidespin."""
     if sidespin < slice_border:
         return "SLICE"
     elif sidespin < fade_border:
@@ -37,98 +36,124 @@ def shot_curvature(
         return "HOOK"
 
 
-def shotType(shot_direction, shot_curvature):
-    if shot_direction == "PULL" and shot_curvature == "HOOK":
-        return "PULL_HOOK"
-    elif shot_direction == "PULL" and shot_curvature == "DRAW":
-        return "PULL_DRAW"
-    elif shot_direction == "PULL" and shot_curvature == "NEUTRAL":
-        return "PULL"
-    elif shot_direction == "PULL" and shot_curvature == "FADE":
-        return "PULL_FADE"
-    elif shot_direction == "PULL" and shot_curvature == "SLICE":
-        return "PULL_SLICE"
-    elif shot_direction == "STRAIGHT" and shot_curvature == "HOOK":
-        return "STRAIGHT_HOOK"
-    elif shot_direction == "STRAIGHT" and shot_curvature == "DRAW":
-        return "STRAIGHT_DRAW"
-    elif shot_direction == "STRAIGHT" and shot_curvature == "NEUTRAL":
-        return "STRAIGHT"
-    elif shot_direction == "STRAIGHT" and shot_curvature == "FADE":
-        return "STRAIGHT_FADE"
-    elif shot_direction == "STRAIGHT" and shot_curvature == "SLICE":
-        return "STRAIGHT_SLICE"
-    elif shot_direction == "PUSH" and shot_curvature == "HOOK":
-        return "PUSH_HOOK"
-    elif shot_direction == "PUSH" and shot_curvature == "DRAW":
-        return "PUSH_DRAW"
-    elif shot_direction == "PUSH" and shot_curvature == "NEUTRAL":
-        return "PUSH"
-    elif shot_direction == "PUSH" and shot_curvature == "FADE":
-        return "PUSH_FADE"
-    elif shot_direction == "PUSH" and shot_curvature == "SLICE":
-        return "PUSH_SLICE"
-    else:
-        return "NO_CATEGORY"
+def shot_type(direction: str, curvature: str) -> str:
+    """Determine shot type based on direction and curvature."""
+    if direction == "PULL":
+        if curvature == "HOOK":
+            return "PULL_HOOK"
+        elif curvature == "DRAW":
+            return "PULL_DRAW"
+        elif curvature == "NEUTRAL":
+            return "PULL"
+        elif curvature == "FADE":
+            return "PULL_FADE"
+        elif curvature == "SLICE":
+            return "PULL_SLICE"
+    elif direction == "STRAIGHT":
+        if curvature == "HOOK":
+            return "STRAIGHT_HOOK"
+        elif curvature == "DRAW":
+            return "STRAIGHT_DRAW"
+        elif curvature == "NEUTRAL":
+            return "STRAIGHT"
+        elif curvature == "FADE":
+            return "STRAIGHT_FADE"
+        elif curvature == "SLICE":
+            return "STRAIGHT_SLICE"
+    elif direction == "PUSH":
+        if curvature == "HOOK":
+            return "PUSH_HOOK"
+        elif curvature == "DRAW":
+            return "PUSH_DRAW"
+        elif curvature == "NEUTRAL":
+            return "PUSH"
+        elif curvature == "FADE":
+            return "PUSH_FADE"
+        elif curvature == "SLICE":
+            return "PUSH_SLICE"
+    return "NO_CATEGORY"
 
 
 # %% File paths
-rawMetrics = (
+RAW_METRICS_PATH = (
     "/Users/rokbohinc/Documents/Work/Golf_AI/Golfshot_Categoriser/data/raw/Metrics"
 )
-extractedMetrics = "/Users/rokbohinc/Documents/Work/Golf_AI/Golfshot_Categoriser/data/extracted/metrics"
+EXTRACTED_METRICS_PATH = "/Users/rokbohinc/Documents/Work/Golf_AI/Golfshot_Categoriser/data/extracted/metrics"
 
 
-# %% Import files
-# List all files in the directory
-file_paths = [
-    os.path.join(rawMetrics, file)
-    for file in os.listdir(rawMetrics)
-    if file.endswith(".csv")
-]
-file_paths = sorted(file_paths)
+# %% Utility functions
+def list_csv_files(directory: str) -> List[str]:
+    """List all CSV files in the specified directory."""
+    return sorted(
+        [
+            os.path.join(directory, file)
+            for file in os.listdir(directory)
+            if file.endswith(".csv")
+        ]
+    )
 
-# Import file
-l_metrics = [pd.read_csv(name, header=[0], skiprows=[1]) for name in file_paths]
 
-# %% Convert Date column to datetime - 2 formats in different files
-for i, df in enumerate(l_metrics):
-    try:
-        l_metrics[i]["Date"] = pd.to_datetime(df["Date"], format="%d.%m.%y %H:%M:%S")
-    except ValueError:
+def load_metrics(files: List[str]) -> List[pd.DataFrame]:
+    """Load metrics from CSV files into data frames."""
+    return [pd.read_csv(file, header=[0], skiprows=[1]) for file in files]
+
+
+def parse_dates(metrics: List[pd.DataFrame]) -> List[pd.DataFrame]:
+    """Parse Date column in different formats."""
+    for i, df in enumerate(metrics):
         try:
-            l_metrics[i]["Date"] = pd.to_datetime(
-                df["Date"], format="%d.%m.%Y %H:%M:%S"
-            )
+            metrics[i]["Date"] = pd.to_datetime(df["Date"], format="%d.%m.%y %H:%M:%S")
         except ValueError:
-            # Handle parsing failure
-            print("Unable to parse date strings in DataFrame index:", i)
+            try:
+                metrics[i]["Date"] = pd.to_datetime(
+                    df["Date"], format="%d.%m.%Y %H:%M:%S"
+                )
+            except ValueError:
+                print("Unable to parse date strings in DataFrame index:", i)
+    return metrics
 
 
-# %%
-# Concat together
-df_metrics = pd.concat(l_metrics)
+def clean_data(df: pd.DataFrame) -> pd.DataFrame:
+    """Clean and deduplicate the data frame."""
+    df = df.round(8)  # Round to handle precision issues
 
-# In case there I have uploaded the same file twice (it will have a different fileName), I have to delete duplicates
-df_metrics = df_metrics.round(
-    8
-)  # If two files of the same session have different format
-df_metrics = df_metrics.map(
-    lambda x: x.strip() if isinstance(x, str) else x
-)  # Remove trailing whitespaces from all columns
-df_metrics = df_metrics.drop_duplicates()
+    # Remove trailing whitespaces from string columns
+    for col in df.select_dtypes(include=["object"]).columns:
+        df[col] = df[col].str.strip()
 
-# Sort by Date
-df_metrics = df_metrics.sort_values(by="Date")
+    df = df.drop_duplicates()
+    return df.sort_values(by="Date")
 
-# %% Add Shot type to the data frame
-df_metrics["shot_direction"] = df_metrics["Launch Direction"].apply(shot_direction)
-df_metrics["shot_curvature"] = df_metrics["Sidespin"].apply(shot_curvature)
-df_metrics["shot_type"] = df_metrics.apply(
-    lambda row: shotType(row["shot_direction"], row["shot_curvature"]), axis=1
-)
 
-# %% Export data frame
-df_metrics.to_csv(os.path.join(extractedMetrics, "MergedMetrics.csv"))
+def add_shot_types(df: pd.DataFrame) -> pd.DataFrame:
+    """Add shot direction, curvature, and type to the data frame."""
+    df["shot_direction"] = df["Launch Direction"].apply(shot_direction)
+    df["shot_curvature"] = df["Sidespin"].apply(shot_curvature)
+    df["shot_type"] = df.apply(
+        lambda row: shot_type(row["shot_direction"], row["shot_curvature"]), axis=1
+    )
+    return df
 
-# %%
+
+def export_data(df: pd.DataFrame, path: str):
+    """Export the data frame to a CSV file."""
+    df.to_csv(path, index=False)
+
+
+def main():
+    # List and load CSV files
+    file_paths = list_csv_files(RAW_METRICS_PATH)
+    metrics_list = load_metrics(file_paths)
+
+    # Parse dates and clean data
+    metrics_list = parse_dates(metrics_list)
+    df_metrics = pd.concat(metrics_list)
+    df_metrics = clean_data(df_metrics)
+
+    # Add shot types and export data
+    df_metrics = add_shot_types(df_metrics)
+    export_data(df_metrics, os.path.join(EXTRACTED_METRICS_PATH, "MergedMetrics.csv"))
+
+
+if __name__ == "__main__":
+    main()
